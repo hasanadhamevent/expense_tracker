@@ -162,7 +162,7 @@ const searchAndSort = () => {
   });
   if (searchFilter.length === 0) {
     expenseSearchError.style.display = "block";
-    expenseSearchError.textContent = "No expense";
+    expenseSearchError.textContent = "No matching expenses";
   } else {
     expenseSearchError.style.display = "none";
   }
