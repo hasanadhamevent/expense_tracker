@@ -265,7 +265,8 @@ input.input-expense-amount[type="number"] {
 /* Validation error text below each field */
 #expenseNameError,
 #expenseAmountError,
-#expenseCategoryError {
+#expenseCategoryError,
+#expenseSearchError {
   display: none;
   flex: 0 0 100%;
   width: 100%;

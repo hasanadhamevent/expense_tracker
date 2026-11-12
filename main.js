@@ -13,7 +13,11 @@ const totalExpenseAmount = document.querySelector("#expense_amount");
 const highestSpentAmount = document.querySelector("#highest_spent_amount");
 
 // search and sorted variables
+const expenseSearch = document.querySelector("#expenseSearch");
 const sortExpenses = document.querySelector("#sortExpenses");
+
+// search error variables
+const expenseSearchError = document.querySelector("#expenseSearchError");
 
 // category variables
 const filterCategory = document.querySelector("#filterCategory");
@@ -152,7 +156,18 @@ expenseList.addEventListener("click", (e) => {
 
 // sortExpenses js start here
 const searchAndSort = () => {
-  const sortedExpense = expenseTrackerArr.toSorted((a, b) => {
+  let searchVal = expenseSearch.value.trim().toLowerCase();
+  let searchFilter = expenseTrackerArr.filter((searchValue) => {
+    return searchValue.expenseName.toLowerCase().includes(searchVal);
+  });
+  if (searchFilter.length === 0) {
+    expenseSearchError.style.display = "block";
+    expenseSearchError.textContent = "No expense";
+  } else {
+    expenseSearchError.style.display = "none";
+  }
+
+  const sortedExpense = searchFilter.toSorted((a, b) => {
     if (sortExpenses.value === "latest") {
       return new Date(b.expenseDate) - new Date(a.expenseDate);
     }
@@ -173,6 +188,7 @@ const searchAndSort = () => {
   renderExpenses(sortedExpense);
 };
 
+expenseSearch.addEventListener("input", searchAndSort);
 sortExpenses.addEventListener("change", searchAndSort);
 
 // categories show
