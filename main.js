@@ -178,8 +178,9 @@ sortExpenses.addEventListener("change", searchAndSort);
 // categories show
 const categoryShow = () => {
   const categoryList = expenseTrackerArr.filter((category) => {
-    console.log(category);
-
+    if (filterCategory.value === "all") {
+      return category;
+    }
     return (
       filterCategory.value.toLowerCase() ===
       category.expenseCategory.toLowerCase()
