@@ -24,9 +24,41 @@ const filterCategory = document.querySelector("#filterCategory");
 
 const expenseTrackerArr = [];
 
+let isEditMode = false;
+let editingExpenseId = null;
+
 expenseForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (validation()) {
+
+  // Step 1: Validate form
+  if (!validation()) return;
+
+  // Step 2: Check edit mode
+  if (isEditMode) {
+    // Find existing expense position
+    const editExpenseIndex = expenseTrackerArr.findIndex((expense) => {
+      return expense.id === editingExpenseId;
+    });
+
+    // Check whether expense exists
+    if (editExpenseIndex === -1) return;
+
+    // Get existing expense
+    const existingExpense = expenseTrackerArr[editExpenseIndex];
+
+    // Update existing expense
+    expenseTrackerArr[editExpenseIndex] = {
+      ...existingExpense,
+      expenseName: expenseName.value.trim(),
+      expenseAmount: Number(expenseAmount.value),
+      expenseCategory: expenseCategory.value,
+    };
+
+    // Reset edit mode
+    isEditMode = false;
+    editingExpenseId = null;
+  } else {
+    // Create new expense
     const expense = {
       id: crypto.randomUUID(),
       expenseName: expenseName.value.trim(),
@@ -34,10 +66,15 @@ expenseForm.addEventListener("submit", (e) => {
       expenseCategory: expenseCategory.value,
       expenseDate: new Date(),
     };
+
     expenseTrackerArr.push(expense);
-    renderExpenses(expenseTrackerArr);
-    e.target.reset();
   }
+
+  // Step 3: Update UI
+  renderExpenses(expenseTrackerArr);
+
+  // Step 4: Reset form
+  expenseForm.reset();
 });
 
 const validation = () => {
@@ -142,7 +179,7 @@ const summaryCard = () => {
     }
   }
   highestSpentAmount.textContent = highestExpense
-    ? `${highestExpense.expenseCategory} - ${highestExpense.expenseAmount}`
+    ? `${highestExpense.expenseCategory} - ${highestExpense.expenseAmount} `
     : "₹0";
   // console.log(highestExpense);
 };
@@ -160,36 +197,24 @@ expenseList.addEventListener("click", (e) => {
   renderExpenses(expenseTrackerArr);
   summaryCard();
 });
-let editMode = false;
+// let editMode = false;
+
 // edit list code
 expenseList.addEventListener("click", (e) => {
   const editBtn = e.target.closest(".editBtn");
   if (!editBtn) return;
   const editExpenseId = editBtn.dataset.id;
-  if (!editMode) {
-    const editExpenseIndex = expenseTrackerArr.findIndex((expense) => {
-      expenseName.value = expense.expenseName;
-      expenseAmount.value = expense.expenseAmount;
-      expenseCategory.value = expense.expenseCategory;
-    });
-    if (editExpenseId === editExpenseIndex) {
-      expenseTrackerArr.push(editExpenseIndex);
-    }
-    renderExpenses(expenseTrackerArr);
-    // let editDetail = expenseTrackerArr.map((expenses) => {
-    //   if (editExpenseId) {
-    //     return {
-    //       ...expenses,
-    //       expenseName: expenses.expenseName,
-    //       expenseAmount: Number(expenses.expenseAmount),
-    //       expenseCategory: expenses.expenseCategory,
-    //     };
-    //   }
-    //   return expenses;
-    // });
-    // renderExpenses(editDetail);
-  }
-  console.log(editExpenseId);
+  const foundExpense = expenseTrackerArr.find((expenseId) => {
+    return expenseId.id === editExpenseId;
+  });
+  if (!foundExpense) return;
+
+  expenseName.value = foundExpense.expenseName;
+  expenseAmount.value = foundExpense.expenseAmount;
+  expenseCategory.value = foundExpense.expenseCategory;
+
+  isEditMode = true;
+  editingExpenseId = foundExpense.id;
 });
 
 // sortExpenses js start here
