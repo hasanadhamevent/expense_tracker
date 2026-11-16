@@ -22,7 +22,7 @@ const expenseSearchError = document.querySelector("#expenseSearchError");
 // category variables
 const filterCategory = document.querySelector("#filterCategory");
 
-const expenseTrackerArr = [];
+let expenseTrackerArr = [];
 
 let isEditMode = false;
 let editingExpenseId = null;
@@ -57,6 +57,7 @@ expenseForm.addEventListener("submit", (e) => {
     // Reset edit mode
     isEditMode = false;
     editingExpenseId = null;
+    saveTasks();
   } else {
     // Create new expense
     const expense = {
@@ -69,8 +70,8 @@ expenseForm.addEventListener("submit", (e) => {
 
     expenseTrackerArr.push(expense);
   }
-
   // Step 3: Update UI
+  saveTasks();
   renderExpenses(expenseTrackerArr);
 
   // Step 4: Reset form
@@ -160,6 +161,7 @@ const renderExpenses = (expenses) => {
     })
     .join("");
   summaryCard();
+  saveTasks();
 };
 
 const summaryCard = () => {
@@ -182,8 +184,22 @@ const summaryCard = () => {
     ? `${highestExpense.expenseCategory} - ${highestExpense.expenseAmount} `
     : "₹0";
   // console.log(highestExpense);
+  saveTasks();
 };
 
+// save task in localstorage
+const saveTasks = () => {
+  let dataStore = JSON.stringify(expenseTrackerArr);
+  localStorage.setItem("tasks", dataStore);
+};
+
+const loadTask = () => {
+  let getData = localStorage.getItem("tasks");
+  if (getData) {
+    expenseTrackerArr = JSON.parse(getData);
+  }
+  renderExpenses(expenseTrackerArr);
+};
 // delete list code
 expenseList.addEventListener("click", (e) => {
   const deleteBtn = e.target.closest(".deleteBtn");
@@ -196,6 +212,7 @@ expenseList.addEventListener("click", (e) => {
   expenseTrackerArr.splice(expenseIndex, 1);
   renderExpenses(expenseTrackerArr);
   summaryCard();
+  saveTasks();
 });
 // let editMode = false;
 
@@ -215,6 +232,7 @@ expenseList.addEventListener("click", (e) => {
 
   isEditMode = true;
   editingExpenseId = foundExpense.id;
+  saveTasks();
 });
 
 // sortExpenses js start here
@@ -249,6 +267,7 @@ const searchAndSort = () => {
     return 0;
   });
   renderExpenses(sortedExpense);
+  saveTasks();
 };
 
 expenseSearch.addEventListener("input", searchAndSort);
@@ -266,5 +285,7 @@ const categoryShow = () => {
     );
   });
   renderExpenses(categoryList);
+  saveTasks();
 };
 filterCategory.addEventListener("change", categoryShow);
+loadTask();
