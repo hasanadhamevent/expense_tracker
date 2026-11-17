@@ -22,6 +22,11 @@ const expenseSearchError = document.querySelector("#expenseSearchError");
 // category variables
 const filterCategory = document.querySelector("#filterCategory");
 
+// pagination variables
+let currentPage = 1;
+let expensePerPage = 5;
+let nextBtn = document.querySelector("#nextBtn");
+
 let expenseTrackerArr = [];
 
 let isEditMode = false;
@@ -73,7 +78,7 @@ expenseForm.addEventListener("submit", (e) => {
   // Step 3: Update UI
   saveTasks();
   renderExpenses(expenseTrackerArr);
-
+  displayExpensePagination();
   // Step 4: Reset form
   expenseForm.reset();
 });
@@ -291,4 +296,30 @@ filterCategory.addEventListener("change", categoryShow);
 
 // pagination js
 
+let displayExpensePagination = () => {
+  let totalPage = Math.ceil(expenseTrackerArr.length / expensePerPage);
+
+  let startIndex = (currentPage - 1) * expensePerPage;
+  let endIndex = startIndex + expensePerPage;
+
+  let displayExpensePerPage = expenseTrackerArr.slice(startIndex, endIndex);
+  // console.log(startIndex);
+
+  renderExpenses(displayExpensePerPage);
+  // console.log(`corrent page : ${currentPage}`);
+  // console.log(`corrent page : ${endIndex}`);
+
+  console.log(displayExpensePerPage);
+};
+nextBtn.addEventListener("click", () => {
+  let totalPage = Math.ceil(expenseTrackerArr.length / expensePerPage);
+
+  if (currentPage < totalPage) {
+    currentPage++;
+    displayExpensePagination();
+  }
+  console.log(`current page : ${currentPage}`);
+  console.log(`index number : ${endIndex}`);
+});
+displayExpensePagination;
 loadTask();
