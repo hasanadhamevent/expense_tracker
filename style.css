@@ -660,3 +660,10 @@ input.input-expense-amount[type="number"] {
     grid-template-columns: 1fr;
   }
 }
+
+/* pagination css start here  */
+.pagination {
+  justify-content: end;
+  align-items: center;
+  gap: 10px;
+}

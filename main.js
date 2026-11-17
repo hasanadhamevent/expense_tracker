@@ -288,4 +288,7 @@ const categoryShow = () => {
   saveTasks();
 };
 filterCategory.addEventListener("change", categoryShow);
+
+// pagination js
+
 loadTask();
