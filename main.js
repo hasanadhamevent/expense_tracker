@@ -26,7 +26,7 @@ const expenseTrackerArr = [];
 
 expenseForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (validation()) {
+  if (isEditMode) {
     const expense = {
       id: crypto.randomUUID(),
       expenseName: expenseName.value.trim(),
@@ -34,10 +34,21 @@ expenseForm.addEventListener("submit", (e) => {
       expenseCategory: expenseCategory.value,
       expenseDate: new Date(),
     };
-    expenseTrackerArr.push(expense);
-    renderExpenses(expenseTrackerArr);
-    e.target.reset();
+  } else {
+    if (validation()) {
+      const expense = {
+        id: crypto.randomUUID(),
+        expenseName: expenseName.value.trim(),
+        expenseAmount: Number(expenseAmount.value),
+        expenseCategory: expenseCategory.value,
+        expenseDate: new Date(),
+      };
+      expenseTrackerArr.push(expense);
+      renderExpenses(expenseTrackerArr);
+      e.target.reset();
+    }
   }
+  
 });
 
 const validation = () => {
@@ -160,36 +171,25 @@ expenseList.addEventListener("click", (e) => {
   renderExpenses(expenseTrackerArr);
   summaryCard();
 });
-let editMode = false;
+// let editMode = false;
+let isEditMode = false;
+let editingExpenseId = null
 // edit list code
 expenseList.addEventListener("click", (e) => {
   const editBtn = e.target.closest(".editBtn");
   if (!editBtn) return;
   const editExpenseId = editBtn.dataset.id;
-  if (!editMode) {
-    const editExpenseIndex = expenseTrackerArr.findIndex((expense) => {
-      expenseName.value = expense.expenseName;
-      expenseAmount.value = expense.expenseAmount;
-      expenseCategory.value = expense.expenseCategory;
-    });
-    if (editExpenseId === editExpenseIndex) {
-      expenseTrackerArr.push(editExpenseIndex);
-    }
-    renderExpenses(expenseTrackerArr);
-    // let editDetail = expenseTrackerArr.map((expenses) => {
-    //   if (editExpenseId) {
-    //     return {
-    //       ...expenses,
-    //       expenseName: expenses.expenseName,
-    //       expenseAmount: Number(expenses.expenseAmount),
-    //       expenseCategory: expenses.expenseCategory,
-    //     };
-    //   }
-    //   return expenses;
-    // });
-    // renderExpenses(editDetail);
-  }
-  console.log(editExpenseId);
+  const foundExpense = expenseTrackerArr.find((expenseId) =>{
+    return expenseId.id === editExpenseId;
+  })
+  if (!foundExpense) return;
+
+  expenseName.value = foundExpense.expenseName;
+  expenseAmount.value = foundExpense.expenseAmount;
+  expenseCategory.value = foundExpense.expenseCategory;
+
+  isEditMode = true;
+  editingExpenseId = foundExpense.id;
 });
 
 // sortExpenses js start here
