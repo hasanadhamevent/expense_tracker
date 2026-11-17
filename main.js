@@ -22,11 +22,19 @@ const expenseSearchError = document.querySelector("#expenseSearchError");
 // category variables
 const filterCategory = document.querySelector("#filterCategory");
 
-const expenseTrackerArr = [];
+// pagination variables
+let currentPage = 1;
+let expensePerPage = 5;
+let nextBtn = document.querySelector("#nextBtn");
+
+let expenseTrackerArr = [];
+
+let isEditMode = false;
+let editingExpenseId = null;
 
 expenseForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  if (isEditMode) {
+  if (validation()) {
     const expense = {
       id: crypto.randomUUID(),
       expenseName: expenseName.value.trim(),
@@ -34,21 +42,10 @@ expenseForm.addEventListener("submit", (e) => {
       expenseCategory: expenseCategory.value,
       expenseDate: new Date(),
     };
-  } else {
-    if (validation()) {
-      const expense = {
-        id: crypto.randomUUID(),
-        expenseName: expenseName.value.trim(),
-        expenseAmount: Number(expenseAmount.value),
-        expenseCategory: expenseCategory.value,
-        expenseDate: new Date(),
-      };
-      expenseTrackerArr.push(expense);
-      renderExpenses(expenseTrackerArr);
-      e.target.reset();
-    }
+    expenseTrackerArr.push(expense);
+    renderExpenses(expenseTrackerArr);
+    e.target.reset();
   }
-  
 });
 
 const validation = () => {
@@ -134,6 +131,7 @@ const renderExpenses = (expenses) => {
     })
     .join("");
   summaryCard();
+  saveTasks();
 };
 
 const summaryCard = () => {
@@ -153,11 +151,25 @@ const summaryCard = () => {
     }
   }
   highestSpentAmount.textContent = highestExpense
-    ? `${highestExpense.expenseCategory} - ${highestExpense.expenseAmount}`
+    ? `${highestExpense.expenseCategory} - ${highestExpense.expenseAmount} `
     : "₹0";
   // console.log(highestExpense);
+  saveTasks();
 };
 
+// save task in localstorage
+const saveTasks = () => {
+  let dataStore = JSON.stringify(expenseTrackerArr);
+  localStorage.setItem("tasks", dataStore);
+};
+
+const loadTask = () => {
+  let getData = localStorage.getItem("tasks");
+  if (getData) {
+    expenseTrackerArr = JSON.parse(getData);
+  }
+  renderExpenses(expenseTrackerArr);
+};
 // delete list code
 expenseList.addEventListener("click", (e) => {
   const deleteBtn = e.target.closest(".deleteBtn");
@@ -170,26 +182,38 @@ expenseList.addEventListener("click", (e) => {
   expenseTrackerArr.splice(expenseIndex, 1);
   renderExpenses(expenseTrackerArr);
   summaryCard();
+  saveTasks();
 });
-// let editMode = false;
-let isEditMode = false;
-let editingExpenseId = null
+let editMode = false;
 // edit list code
 expenseList.addEventListener("click", (e) => {
   const editBtn = e.target.closest(".editBtn");
   if (!editBtn) return;
   const editExpenseId = editBtn.dataset.id;
-  const foundExpense = expenseTrackerArr.find((expenseId) =>{
-    return expenseId.id === editExpenseId;
-  })
-  if (!foundExpense) return;
-
-  expenseName.value = foundExpense.expenseName;
-  expenseAmount.value = foundExpense.expenseAmount;
-  expenseCategory.value = foundExpense.expenseCategory;
-
-  isEditMode = true;
-  editingExpenseId = foundExpense.id;
+  if (!editMode) {
+    const editExpenseIndex = expenseTrackerArr.findIndex((expense) => {
+      expenseName.value = expense.expenseName;
+      expenseAmount.value = expense.expenseAmount;
+      expenseCategory.value = expense.expenseCategory;
+    });
+    if (editExpenseId === editExpenseIndex) {
+      expenseTrackerArr.push(editExpenseIndex);
+    }
+    renderExpenses(expenseTrackerArr);
+    // let editDetail = expenseTrackerArr.map((expenses) => {
+    //   if (editExpenseId) {
+    //     return {
+    //       ...expenses,
+    //       expenseName: expenses.expenseName,
+    //       expenseAmount: Number(expenses.expenseAmount),
+    //       expenseCategory: expenses.expenseCategory,
+    //     };
+    //   }
+    //   return expenses;
+    // });
+    // renderExpenses(editDetail);
+  }
+  console.log(editExpenseId);
 });
 
 // sortExpenses js start here
@@ -224,6 +248,7 @@ const searchAndSort = () => {
     return 0;
   });
   renderExpenses(sortedExpense);
+  saveTasks();
 };
 
 expenseSearch.addEventListener("input", searchAndSort);
@@ -241,5 +266,36 @@ const categoryShow = () => {
     );
   });
   renderExpenses(categoryList);
+  saveTasks();
 };
 filterCategory.addEventListener("change", categoryShow);
+
+// pagination js
+
+let displayExpensePagination = () => {
+  let totalPage = Math.ceil(expenseTrackerArr.length / expensePerPage);
+
+  let startIndex = (currentPage - 1) * expensePerPage;
+  let endIndex = startIndex + expensePerPage;
+
+  let displayExpensePerPage = expenseTrackerArr.slice(startIndex, endIndex);
+  // console.log(startIndex);
+
+  renderExpenses(displayExpensePerPage);
+  // console.log(`corrent page : ${currentPage}`);
+  // console.log(`corrent page : ${endIndex}`);
+
+  console.log(displayExpensePerPage);
+};
+nextBtn.addEventListener("click", () => {
+  let totalPage = Math.ceil(expenseTrackerArr.length / expensePerPage);
+
+  if (currentPage < totalPage) {
+    currentPage++;
+    displayExpensePagination();
+  }
+  console.log(`current page : ${currentPage}`);
+  console.log(`index number : ${endIndex}`);
+});
+displayExpensePagination;
+loadTask();
