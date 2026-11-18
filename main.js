@@ -48,15 +48,12 @@ expenseForm.addEventListener("submit", (e) => {
     renderExpenses(expenseTrackerArr);
     e.target.reset();
   }
-<<<<<<< HEAD
-=======
   // Step 3: Update UI
   saveTasks();
   // renderExpenses(expenseTrackerArr);
   displayExpensePagination(expenseTrackerArr);
   // Step 4: Reset form
   expenseForm.reset();
->>>>>>> ac5dca2 (pagination work are completed.)
 });
 
 const validation = () => {
