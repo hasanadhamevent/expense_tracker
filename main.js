@@ -26,6 +26,8 @@ const filterCategory = document.querySelector("#filterCategory");
 let currentPage = 1;
 let expensePerPage = 5;
 let nextBtn = document.querySelector("#nextBtn");
+const prevBtn = document.querySelector("#prev");
+const pageNumbers = document.querySelector("#page-numbers");
 
 let expenseTrackerArr = [];
 
@@ -46,6 +48,15 @@ expenseForm.addEventListener("submit", (e) => {
     renderExpenses(expenseTrackerArr);
     e.target.reset();
   }
+<<<<<<< HEAD
+=======
+  // Step 3: Update UI
+  saveTasks();
+  // renderExpenses(expenseTrackerArr);
+  displayExpensePagination(expenseTrackerArr);
+  // Step 4: Reset form
+  expenseForm.reset();
+>>>>>>> ac5dca2 (pagination work are completed.)
 });
 
 const validation = () => {
@@ -168,7 +179,8 @@ const loadTask = () => {
   if (getData) {
     expenseTrackerArr = JSON.parse(getData);
   }
-  renderExpenses(expenseTrackerArr);
+  // renderExpenses(expenseTrackerArr);
+  displayExpensePagination(expenseTrackerArr);
 };
 // delete list code
 expenseList.addEventListener("click", (e) => {
@@ -180,7 +192,9 @@ expenseList.addEventListener("click", (e) => {
   });
   if (expenseIndex === -1) return;
   expenseTrackerArr.splice(expenseIndex, 1);
-  renderExpenses(expenseTrackerArr);
+  // renderExpenses(expenseTrackerArr);
+  displayExpensePagination(expenseTrackerArr);
+
   summaryCard();
   saveTasks();
 });
@@ -247,7 +261,9 @@ const searchAndSort = () => {
     }
     return 0;
   });
-  renderExpenses(sortedExpense);
+  // renderExpenses(sortedExpense);
+  displayExpensePagination(sortedExpense);
+
   saveTasks();
 };
 
@@ -265,7 +281,9 @@ const categoryShow = () => {
       category.expenseCategory.toLowerCase()
     );
   });
-  renderExpenses(categoryList);
+  displayExpensePagination(categoryList);
+
+  // renderExpenses(categoryList);
   saveTasks();
 };
 filterCategory.addEventListener("change", categoryShow);
@@ -280,22 +298,28 @@ let displayExpensePagination = () => {
 
   let displayExpensePerPage = expenseTrackerArr.slice(startIndex, endIndex);
   // console.log(startIndex);
+  pageNumbers.textContent = `Page ${currentPage} to ${totalPage}`;
 
   renderExpenses(displayExpensePerPage);
-  // console.log(`corrent page : ${currentPage}`);
-  // console.log(`corrent page : ${endIndex}`);
-
-  console.log(displayExpensePerPage);
+  saveTasks();
 };
+
+prevBtn.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+  }
+  displayExpensePagination();
+  saveTasks();
+});
+
 nextBtn.addEventListener("click", () => {
   let totalPage = Math.ceil(expenseTrackerArr.length / expensePerPage);
 
-  if (currentPage < totalPage) {
+  if (currentPage <= totalPage) {
     currentPage++;
-    displayExpensePagination();
   }
-  console.log(`current page : ${currentPage}`);
-  console.log(`index number : ${endIndex}`);
+  displayExpensePagination();
+  saveTasks();
 });
-displayExpensePagination;
 loadTask();
+displayExpensePagination();

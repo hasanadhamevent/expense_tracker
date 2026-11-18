@@ -667,3 +667,9 @@ input.input-expense-amount[type="number"] {
   align-items: center;
   gap: 10px;
 }
+
+p#page-numbers {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
