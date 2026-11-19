@@ -211,18 +211,6 @@ expenseList.addEventListener("click", (e) => {
       expenseTrackerArr.push(editExpenseIndex);
     }
     renderExpenses(expenseTrackerArr);
-    // let editDetail = expenseTrackerArr.map((expenses) => {
-    //   if (editExpenseId) {
-    //     return {
-    //       ...expenses,
-    //       expenseName: expenses.expenseName,
-    //       expenseAmount: Number(expenses.expenseAmount),
-    //       expenseCategory: expenses.expenseCategory,
-    //     };
-    //   }
-    //   return expenses;
-    // });
-    // renderExpenses(editDetail);
   }
   console.log(editExpenseId);
 });
@@ -258,8 +246,8 @@ const searchAndSort = () => {
     }
     return 0;
   });
-  // renderExpenses(sortedExpense);
-  displayExpensePagination(sortedExpense);
+  renderExpenses(sortedExpense);
+  // displayExpensePagination(sortedExpense);
 
   saveTasks();
 };
@@ -278,9 +266,9 @@ const categoryShow = () => {
       category.expenseCategory.toLowerCase()
     );
   });
-  displayExpensePagination(categoryList);
+  // displayExpensePagination(categoryList);
 
-  // renderExpenses(categoryList);
+  renderExpenses(categoryList);
   saveTasks();
 };
 filterCategory.addEventListener("change", categoryShow);
@@ -314,6 +302,7 @@ nextBtn.addEventListener("click", () => {
 
   if (currentPage <= totalPage) {
     currentPage++;
+    console.log(currentPage);
   }
   displayExpensePagination();
   saveTasks();
