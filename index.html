@@ -172,38 +172,74 @@
     </section>
     <!-- form section end here  -->
 
-    <!-- search form  -->
-    <section class="formSection">
+    <!-- Expense filters start -->
+    <section class="toolsSection">
       <div class="wrapper">
-        <form id="expenseForm">
-          <div class="row">
-            <div class="input-group mb-12 col-md-12">
-              <span class="input-group-text">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-search"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-                  />
-                </svg>
-              </span>
+        <div class="expense-tools">
+          <!-- Date range picker -->
+          <div class="date-range">
+            <div class="filter-title">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="19"
+                height="19"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                />
+              </svg>
+              <span>Filter by Date</span>
+            </div>
+
+            <div class="date-inputs">
+              <div class="date-field">
+                <label for="fromDate">From Date</label>
+                <input type="date" id="fromDate" />
+              </div>
+
+              <div class="date-separator">
+                <span>to</span>
+              </div>
+
+              <div class="date-field">
+                <label for="toDate">To Date</label>
+                <input type="date" id="toDate" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Search expenses -->
+          <div class="expense-search">
+            <label for="expenseSearch">Search Expenses</label>
+
+            <div class="search-input">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="19"
+                height="19"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                />
+              </svg>
+
               <input
                 type="text"
                 id="expenseSearch"
-                class="form-control"
-                placeholder="Search expenses"
+                placeholder="Search by expense name..."
               />
-              <p id="expenseSearchError" class="error">enter</p>
             </div>
+
+            <p id="expenseSearchError" class="error"></p>
           </div>
-        </form>
+        </div>
       </div>
     </section>
+    <!-- Expense filters end -->
 
     <!-- card section start here  -->
     <section class="card_section">
