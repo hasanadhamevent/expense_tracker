@@ -307,5 +307,33 @@ nextBtn.addEventListener("click", () => {
   displayExpensePagination();
   saveTasks();
 });
+
+// date picker code
+const fromDate = document.querySelector("#fromDate");
+const toDate = document.querySelector("#toDate");
+const dateStore = new Date();
+// console.log(fullDate);
+
+const datePicker = () => {
+  // let valStore = "";
+  let fullDate = `${dateStore.getFullYear()}-${String(dateStore.getMonth() + 1).padStart(2, "0")}-${String(dateStore.getDate()).padStart(2, "0")}`;
+
+  fromDate.addEventListener("change", () => {
+    // valStore = fromDate.value;
+    console.log(`from Date : ${fromDate.value}`);
+    if (fullDate === fromDate.value) {
+      console.log("Date are match");
+    } else {
+      console.log("Date are not match");
+    }
+  });
+
+  toDate.addEventListener("change", () => {
+    console.log(`to Date : ${toDate.value}`);
+  });
+  // console.log(fromDate.getMonth());
+};
+datePicker();
+
 loadTask();
 displayExpensePagination();
